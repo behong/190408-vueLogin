@@ -2,10 +2,10 @@
 <v-container fill-height style="max-width:450px">
     <v-layout align-center row wrap>
         <v-flex xs12>
-            <v-alert class="mb-3" :value="isError" type="error">
+            <v-alert class="mb-3" :value="loginFail" type="error">
              로그인 오류 !!!
             </v-alert>
-            <v-alert class="mb-3" :value="loginSuccess" type="success">
+            <v-alert class="mb-3" :value="isLogin" type="success">
              로그인 성공 !!!
             </v-alert>
             <v-card>
@@ -27,7 +27,10 @@
                 depressed
                 block
                 large
-                @click="login()"
+                @click="login({
+                    sEmail:email,
+                    sPass:password
+                })"
                 >로그인</v-btn>
             </div>               
           </v-card>
@@ -38,38 +41,41 @@
 
 
 <script>
+import {mapState,mapActions} from 'vuex'
+
 export default {
     data(){
         return{
             email:null,
             password:null,
-            allUsers:[
-                {id:1,name:'지유',email:'jiyu@korea.com',password:'123456'},
-                {id:2,name:'소유',email:'soyu@korea.com',password:'123456'}
-            ],
-            isError : false,
-            loginSuccess: false
+            //isError : false,
+            //loginSuccess: false
         }
     },
+    computed:{
+        ...mapState(['isLogin','loginFail'])
+    },
     methods:{
-        login(){
-        //전체 유저에서 해당 이메일 유저를 찾는다
-        let selectedUser = null
+        // store.js Actions 에 정의 되어 있는메서드명..
+        ...mapActions(["login"]),
+        // login(){
+        //     // //전체 유저에서 해당 이메일 유저를 찾는다
+        //     // let selectedUser = null
 
-        this.allUsers.forEach(user =>{
-            if(user.email === this.email) selectedUser = user
-        })            
+        //     // this.allUsers.forEach(user =>{
+        //     //     if(user.email === this.email) selectedUser = user
+        //     // })            
 
-        // 찾은 유저의 비밀번호 입력된 값과 비교한다
-        if(selectedUser === null) this.isError = true //alert("입력하신 이메일이 없습니다.")
-        else{
-            selectedUser.password !== this.password
-            ? this.isError = true
-            //alert("입력하신 이메일과 비밀번호 일치하지 않습니다.")
-            : this.loginSuccess = true //alert(selectedUser.name + "님 로그인 성공 하였습니다.")
-        }
+        //     // // 찾은 유저의 비밀번호 입력된 값과 비교한다
+        //     // if(selectedUser === null) this.isError = true //alert("입력하신 이메일이 없습니다.")
+        //     // else{
+        //     //     selectedUser.password !== this.password
+        //     //     ? this.isError = true
+        //     //     //alert("입력하신 이메일과 비밀번호 일치하지 않습니다.")
+        //     //     : this.loginSuccess = true //alert(selectedUser.name + "님 로그인 성공 하였습니다.")
+        //     // }
         
-        }
+        // }
     }
     
 }
